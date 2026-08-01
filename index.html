@@ -121,6 +121,20 @@
   @media (max-width:560px){
     .metric .val{font-size:23px}
     .topbar .stand{margin-left:0;width:100%;text-align:left}
+    .tscroll{overflow-x:visible}
+    table{min-width:0}
+    thead{display:none}
+    tbody,tbody tr,tbody td{display:block}
+    tbody tr{border:1px solid var(--line);border-radius:12px;margin:0 14px 10px;padding:4px 0;background:#fff}
+    tbody tr:hover{background:#fff}
+    tbody tr:last-child{margin-bottom:14px}
+    tbody td{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:right;white-space:normal;padding:8px 14px;border-bottom:1px solid var(--lilac)}
+    tbody td:last-child{border-bottom:0}
+    tbody td::before{content:attr(data-label);color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;font-weight:600;text-align:left;flex:none}
+    tbody td.tcell{display:block;background:var(--lilac);border-bottom:0;border-radius:11px 11px 0 0;padding:11px 14px}
+    tbody td.tcell::before{content:none}
+    tbody td.tcell .tk-cell{margin-top:2px}
+    .wcell{justify-content:flex-end}
   }
   @media (prefers-reduced-motion:reduce){
     .seg{transition:none} .skel{animation:none}
@@ -257,15 +271,15 @@ function render(){
   const rows = held.map(p=>{
     const okFlag = p.ticker && p.priceOk===false ? `<div class="flag">Kurs n/v</div>` : "";
     return `<tr>
-      <td><span class="name">${esc(p.name)}</span><span class="tk-cell">${esc(p.ticker||"–")}${okFlag?" ⚠":""}</span></td>
-      <td class="ccy">${esc(p.currency||"")}</td>
-      <td class="num">${p.buyPrice!=null?nf.format(p.buyPrice):"–"}</td>
-      <td class="num">${p.currentPrice!=null?nf.format(p.currentPrice):(okFlag?"n/v":"–")}</td>
-      <td class="ret ${cls(p.currentReturn)}">${pf(p.currentReturn)}</td>
-      <td><div class="wcell"><span class="num">${pf0(p.weight)}</span><span class="wbar"><span style="width:${Math.min(100,(p.weight||0)*100/ (0.25))}%"></span></span></div></td>
-      <td class="num">${p.targetPrice!=null?nf.format(p.targetPrice):"–"}</td>
-      <td class="num ${cls(p.potential)}">${p.potential!=null?pf(p.potential):"–"}</td>
-      <td><span class="badge hold">Gehalten</span></td>
+      <td class="tcell"><span class="name">${esc(p.name)}</span><span class="tk-cell">${esc(p.ticker||"–")}${okFlag?" ⚠":""}</span></td>
+      <td class="ccy" data-label="Währung">${esc(p.currency||"")}</td>
+      <td class="num" data-label="Kaufkurs">${p.buyPrice!=null?nf.format(p.buyPrice):"–"}</td>
+      <td class="num" data-label="Live-Kurs">${p.currentPrice!=null?nf.format(p.currentPrice):(okFlag?"n/v":"–")}</td>
+      <td class="ret ${cls(p.currentReturn)}" data-label="Return">${pf(p.currentReturn)}</td>
+      <td data-label="Gewicht"><div class="wcell"><span class="num">${pf0(p.weight)}</span><span class="wbar"><span style="width:${Math.min(100,(p.weight||0)*100/ (0.25))}%"></span></span></div></td>
+      <td class="num" data-label="Zielkurs">${p.targetPrice!=null?nf.format(p.targetPrice):"–"}</td>
+      <td class="num ${cls(p.potential)}" data-label="Kurspotenzial">${p.potential!=null?pf(p.potential):"–"}</td>
+      <td data-label="Status"><span class="badge hold">Gehalten</span></td>
     </tr>`;
   }).join("");
   const table = `<div class="card">
@@ -282,12 +296,12 @@ function render(){
   let realized = "";
   if(sold.length){
     const srows = sold.map(p=>`<tr>
-      <td><span class="name">${esc(p.name)}</span><span class="tk-cell">${esc(p.ticker||"–")}</span></td>
-      <td class="ccy">${esc(p.currency||"")}</td>
-      <td class="num">${p.buyPrice!=null?nf.format(p.buyPrice):"–"}</td>
-      <td class="num">${p.sellPrice!=null?nf.format(p.sellPrice):"–"}</td>
-      <td class="ret ${cls(p.realizedGain)}">${pf(p.realizedGain)}</td>
-      <td><span class="badge sold">Verkauft</span></td>
+      <td class="tcell"><span class="name">${esc(p.name)}</span><span class="tk-cell">${esc(p.ticker||"–")}</span></td>
+      <td class="ccy" data-label="Währung">${esc(p.currency||"")}</td>
+      <td class="num" data-label="Kaufkurs">${p.buyPrice!=null?nf.format(p.buyPrice):"–"}</td>
+      <td class="num" data-label="Verkaufskurs">${p.sellPrice!=null?nf.format(p.sellPrice):"–"}</td>
+      <td class="ret ${cls(p.realizedGain)}" data-label="Realisierter Gewinn">${pf(p.realizedGain)}</td>
+      <td data-label="Status"><span class="badge sold">Verkauft</span></td>
     </tr>`).join("");
     realized = `<div class="card">
       <h2>Realisierte Positionen</h2>
@@ -303,7 +317,24 @@ function render(){
   view.innerHTML = `${banner}<h1 class="depot">${esc(d.name)}</h1>
     <div class="subline">Unrealisiert ${pf(d.unrealizedContribution)} · realisiert ${pf(d.realizedContribution)} · alle Angaben in %</div>
     ${metrics}${alloc}${table}${realized}`;
+  postHeight();
 }
+
+/* iframe-Auto-Höhe: Inhaltshöhe wiederholt an das systeme.io-Fenster melden */
+function postHeight(){
+  try{
+    const h = Math.max(
+      document.body ? document.body.scrollHeight : 0,
+      document.documentElement.scrollHeight,
+      Math.ceil(document.documentElement.getBoundingClientRect().height)
+    ) + 12;
+    parent.postMessage({ h2iHeight: h }, "*");
+  }catch(e){}
+}
+window.addEventListener("resize", postHeight);
+window.addEventListener("load", postHeight);
+/* mehrfach nachfeuern, damit die Meldung nicht verpasst wird (Race mit dem Parent-Listener) */
+[150,400,800,1300,2000,3000,4500].forEach(t=>setTimeout(postHeight, t));
 
 async function load(){
   skeleton();
