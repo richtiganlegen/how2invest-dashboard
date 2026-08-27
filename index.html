@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  /* ---- Marken-Tokens (bei Bedarf gegen exakte Elementor-Werte tauschen) ---- */
   :root{
     --aubergine:#20032C;
     --indigo:#363084;
@@ -34,8 +33,6 @@
     -webkit-font-smoothing:antialiased; line-height:1.45;
   }
   .wrap{max-width:1040px; margin:0 auto; padding:0 20px 56px}
-
-  /* ---- Markenleiste ---- */
   .topbar{background:var(--aubergine); color:#fff;}
   .topbar .inner{max-width:1040px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
   .wordmark{font-family:var(--font-display);font-weight:800;font-size:20px;letter-spacing:-.02em;color:#fff}
@@ -43,8 +40,6 @@
   .topbar .sep{width:1px;height:18px;background:rgba(255,255,255,.22)}
   .topbar .kicker{font-size:13px;color:rgba(255,255,255,.72);font-weight:500}
   .topbar .stand{margin-left:auto;font-family:var(--font-mono);font-size:11.5px;color:rgba(255,255,255,.6);text-align:right}
-
-  /* ---- Depot-Umschalter ---- */
   .switch{display:inline-flex;background:var(--lilac);border:1px solid var(--line);border-radius:999px;padding:4px;margin:26px 0 22px;gap:2px}
   .switch button{
     font-family:var(--font-body);font-weight:600;font-size:14px;color:var(--muted);
@@ -52,11 +47,8 @@
   }
   .switch button[aria-selected="true"]{background:var(--aubergine);color:#fff}
   .switch button:focus-visible{outline:2px solid var(--iris);outline-offset:2px}
-
   h1.depot{font-family:var(--font-display);font-weight:700;font-size:clamp(26px,4vw,36px);letter-spacing:-.02em;margin:0 0 4px}
   .subline{color:var(--muted);font-size:14px;margin-bottom:22px}
-
-  /* ---- Kennzahlen ---- */
   .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
   .metric{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px 14px;box-shadow:var(--shadow)}
   .metric .lab{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;margin-bottom:7px}
@@ -65,8 +57,6 @@
   .metric.lead .lab{color:rgba(255,255,255,.66)}
   .pos{color:var(--pos)} .neg{color:var(--neg)}
   .metric.lead .pos{color:#5fd6a3} .metric.lead .neg{color:#ff8aa1}
-
-  /* ---- Allokationsbalken (Signature) ---- */
   .alloc{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:26px}
   .alloc h2{font-family:var(--font-display);font-weight:700;font-size:15px;margin:0 0 3px}
   .alloc .hint{font-size:12.5px;color:var(--muted);margin-bottom:13px}
@@ -79,8 +69,6 @@
   .legend .sw{width:11px;height:11px;border-radius:3px;flex:none}
   .legend .nm{font-weight:500}
   .legend .wt{font-family:var(--font-mono);color:var(--muted)}
-
-  /* ---- Tabelle ---- */
   .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:22px}
   .card h2{font-family:var(--font-display);font-weight:700;font-size:15px;margin:0;padding:16px 18px 12px}
   .tscroll{overflow-x:auto}
@@ -103,8 +91,6 @@
   .badge.hold{background:var(--lilac);color:var(--indigo)}
   .badge.sold{background:#fbe9ee;color:var(--neg)}
   .flag{font-size:10.5px;color:var(--neg);font-family:var(--font-mono)}
-
-  /* ---- Zustände ---- */
   .state{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:34px 22px;text-align:center;color:var(--muted)}
   .state h3{font-family:var(--font-display);color:var(--ink);margin:0 0 8px;font-size:18px}
   .state code{font-family:var(--font-mono);font-size:12px;background:var(--lilac);padding:2px 6px;border-radius:5px;color:var(--indigo);word-break:break-all}
@@ -112,12 +98,10 @@
   .state button:focus-visible{outline:2px solid var(--aubergine);outline-offset:2px}
   .skel{height:14px;border-radius:6px;background:linear-gradient(90deg,var(--lilac),var(--lilac-2),var(--lilac));background-size:200% 100%;animation:sh 1.3s infinite}
   @keyframes sh{to{background-position:-200% 0}}
-
   .preview-note{display:flex;gap:9px;align-items:center;background:#fff6e6;border:1px solid #f2dca0;color:#8a6a12;border-radius:10px;padding:10px 14px;font-size:12.5px;margin-bottom:18px}
   .preview-note b{font-weight:600}
   footer{color:var(--muted);font-size:11.5px;line-height:1.55;border-top:1px solid var(--line);padding-top:16px}
   footer strong{color:var(--ink);font-weight:600}
-
   @media (max-width:560px){
     .metric .val{font-size:23px}
     .topbar .stand{margin-left:0;width:100%;text-align:left}
@@ -150,7 +134,6 @@
       <span class="stand" id="stand"></span>
     </div>
   </div>
-
   <div class="wrap">
     <div class="switch" role="tablist" aria-label="Depot wählen">
       <button role="tab" id="tab-value" aria-selected="true" data-depot="value">Value Depot</button>
@@ -163,23 +146,17 @@
       Positions-Return in Originalwährung des Titels. Alle Angaben in Prozent — die Anlagesumme entscheidet jede/r selbst. Ohne Gewähr.
     </footer>
   </div>
-
 <script>
-/* Worker-URL – bei eigener Domain/Route hier anpassen */
 const WORKER_URL = "https://how2invest-dashboard.blue-hill-33fd.workers.dev";
-
 const nf  = new Intl.NumberFormat("de-CH", {minimumFractionDigits:2, maximumFractionDigits:2});
 const pf  = (x) => (x==null||isNaN(x)) ? "–" : (x>=0?"+":"") + new Intl.NumberFormat("de-CH",{minimumFractionDigits:1,maximumFractionDigits:1}).format(x*100) + "%";
 const pf0 = (x) => (x==null||isNaN(x)) ? "–" : new Intl.NumberFormat("de-CH",{minimumFractionDigits:1,maximumFractionDigits:1}).format(x*100) + "%";
 const chf = (x) => (x==null||isNaN(x)) ? "–" : "CHF " + new Intl.NumberFormat("de-CH",{maximumFractionDigits:0}).format(x);
 const cls = (x) => x==null?"":(x>=0?"pos":"neg");
 const esc = (s) => String(s??"").replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-
 let DATA = null;
 let current = "value";
 let preview = false;
-
-/* Beispieldaten (Sheet-Werte + zuletzt beobachtete Kurse) – nur solange der Worker nicht antwortet */
 const SAMPLE = {generatedAt:new Date().toISOString(), depots:{
   value:{name:"Value Depot",cashQuote:0.501,equityQuote:0.499,heldCount:5,
     realizedContribution:0.043,unrealizedContribution:0.0225,totalReturn:0.0655,
@@ -197,7 +174,6 @@ const SAMPLE = {generatedAt:new Date().toISOString(), depots:{
       {name:"XPeng Inc. (ADR)",ticker:"XPEV",currency:"USD",buyPrice:12.78,weight:0.20,targetPrice:null,potential:null,status:"Gehalten",currentPrice:13.20,currentReturn:0.0329,priceOk:true}
     ]}
 }};
-
 const view = document.getElementById("view");
 document.querySelectorAll(".switch button").forEach(b=>{
   b.addEventListener("click", ()=>select(b.dataset.depot));
@@ -207,13 +183,11 @@ function select(depot){
   document.querySelectorAll(".switch button").forEach(b=>b.setAttribute("aria-selected", String(b.dataset.depot===depot)));
   render();
 }
-
 function skeleton(){
   view.innerHTML = `<div class="metrics">${Array(4).fill('<div class="metric"><div class="skel" style="width:60%"></div><div class="skel" style="height:26px;margin-top:12px"></div></div>').join("")}</div>
   <div class="alloc"><div class="skel" style="width:40%;height:16px"></div><div class="skel" style="height:40px;margin-top:14px;border-radius:9px"></div></div>
   <div class="card" style="padding:18px"><div class="skel" style="width:30%;height:16px"></div>${Array(4).fill('<div class="skel" style="margin-top:14px"></div>').join("")}</div>`;
 }
-
 function errorState(msg){
   view.innerHTML = `<div class="state">
     <h3>Daten konnten nicht geladen werden</h3>
@@ -223,24 +197,18 @@ function errorState(msg){
   </div>`;
   document.getElementById("retry").addEventListener("click", load);
 }
-
-/* Farb-Rampe Indigo -> Iris für Positionssegmente */
 function ramp(i,n){
-  const a=[54,48,132], b=[76,93,219];        // indigo -> iris
+  const a=[54,48,132], b=[76,93,219];
   const t = n<=1?0:i/(n-1);
   const c = a.map((v,k)=>Math.round(v+(b[k]-v)*t));
   return `rgb(${c[0]},${c[1]},${c[2]})`;
 }
-
 function render(){
   const d = DATA.depots[current];
   document.getElementById("stand").textContent =
     "Stand " + new Date(DATA.generatedAt).toLocaleString("de-CH",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}) + " · Kurse verzögert";
-
   const held = d.positions.filter(p=>p.status!=="Verkauft");
   const sold = d.positions.filter(p=>p.status==="Verkauft");
-
-  /* Kennzahlen */
   const metrics = `<div class="metrics">
     <div class="metric lead"><div class="lab">Gesamt-Return</div><div class="val ${cls(d.totalReturn)}">${pf(d.totalReturn)}</div></div>
     <div class="metric"><div class="lab">Cash-Quote</div><div class="val">${pf0(d.cashQuote)}</div></div>
@@ -248,26 +216,23 @@ function render(){
     <div class="metric"><div class="lab">Realisiert</div><div class="val ${cls(d.realizedContribution)}">${pf(d.realizedContribution)}</div></div>
     <div class="metric"><div class="lab">Positionen</div><div class="val">${d.heldCount}</div></div>
   </div>`;
-
-  /* Allokationsbalken */
   let segs = "", legend = "";
   held.forEach((p,i)=>{
-    const w = (p.weight||0)*100;
+    const wt = p.currentWeight ?? p.weight ?? null;
+    const w = (wt||0)*100;
     const col = ramp(i, held.length);
-    segs += `<div class="seg" style="width:${w}%;background:${col}" title="${esc(p.name)} · ${pf0(p.weight)} · Return ${pf(p.currentReturn)}"><span class="tk">${w>7?esc(p.ticker||""):""}</span></div>`;
-    legend += `<div class="it"><span class="sw" style="background:${col}"></span><span class="nm">${esc(p.name)}</span><span class="wt">${pf0(p.weight)}</span></div>`;
+    segs += `<div class="seg" style="width:${w}%;background:${col}" title="${esc(p.name)} · ${pf0(wt)} · Return ${pf(p.currentReturn)}"><span class="tk">${w>7?esc(p.ticker||""):""}</span></div>`;
+    legend += `<div class="it"><span class="sw" style="background:${col}"></span><span class="nm">${esc(p.name)}</span><span class="wt">${pf0(wt)}</span></div>`;
   });
   const cashW = (d.cashQuote||0)*100;
   segs += `<div class="seg cash" style="width:${cashW}%;background:var(--lilac-2)"><span class="tk">${cashW>7?"Cash":""}</span></div>`;
   legend += `<div class="it"><span class="sw" style="background:var(--lilac-2)"></span><span class="nm">Liquidität</span><span class="wt">${pf0(d.cashQuote)}</span></div>`;
   const alloc = `<div class="alloc">
     <h2>Depot-Allokation</h2>
-    <div class="hint">Gewichtung je Titel in % — der Rest ist Cash. Die Anlagesumme entscheidet jede/r selbst.</div>
+    <div class="hint">Live-Gewichtung nach Kursverlauf und realisierten Gewinnen — der Rest ist Cash. Die Anlagesumme entscheidet jede/r selbst.</div>
     <div class="bar">${segs}</div>
     <div class="legend">${legend}</div>
   </div>`;
-
-  /* Positionstabelle */
   const rows = held.map(p=>{
     const okFlag = p.ticker && p.priceOk===false ? `<div class="flag">Kurs n/v</div>` : "";
     return `<tr>
@@ -276,7 +241,7 @@ function render(){
       <td class="num" data-label="Kaufkurs">${p.buyPrice!=null?nf.format(p.buyPrice):"–"}</td>
       <td class="num" data-label="Live-Kurs">${p.currentPrice!=null?nf.format(p.currentPrice):(okFlag?"n/v":"–")}</td>
       <td class="ret ${cls(p.currentReturn)}" data-label="Return">${pf(p.currentReturn)}</td>
-      <td data-label="Gewicht"><div class="wcell"><span class="num">${pf0(p.weight)}</span><span class="wbar"><span style="width:${Math.min(100,(p.weight||0)*100/ (0.25))}%"></span></span></div></td>
+      <td data-label="Live-Gewicht"><div class="wcell"><span class="num">${pf0(p.currentWeight ?? p.weight)}</span><span class="wbar"><span style="width:${Math.min(100,((p.currentWeight ?? p.weight)||0)*100/ (0.25))}%"></span></span></div></td>
       <td class="num" data-label="Zielkurs">${p.targetPrice!=null?nf.format(p.targetPrice):"–"}</td>
       <td class="num ${cls(p.potential)}" data-label="Kurspotenzial">${p.potential!=null?pf(p.potential):"–"}</td>
       <td data-label="Status"><span class="badge hold">Gehalten</span></td>
@@ -286,13 +251,11 @@ function render(){
     <h2>Positionen</h2>
     <div class="tscroll"><table>
       <thead><tr>
-        <th>Titel</th><th>Whg.</th><th>Kaufkurs</th><th>Live-Kurs</th><th>Return</th><th>Gewicht</th><th>Zielkurs</th><th>Kurspotenzial</th><th>Status</th>
+        <th>Titel</th><th>Whg.</th><th>Kaufkurs</th><th>Live-Kurs</th><th>Return</th><th>Live-Gewicht</th><th>Zielkurs</th><th>Kurspotenzial</th><th>Status</th>
       </tr></thead>
       <tbody>${rows || `<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:22px">Keine gehaltenen Positionen.</td></tr>`}</tbody>
     </table></div>
   </div>`;
-
-  /* Realisierte / geschlossene Positionen */
   let realized = "";
   if(sold.length){
     const srows = sold.map(p=>`<tr>
@@ -311,16 +274,12 @@ function render(){
       </table></div>
     </div>`;
   }
-
   const banner = preview ? `<div class="preview-note">◆ <span><b>Vorschau mit Beispieldaten.</b> Sobald der Worker unter <span class="num">${esc(WORKER_URL.replace("https://",""))}</span> live ist, erscheinen hier echte Kurse.</span></div>` : "";
-
   view.innerHTML = `${banner}<h1 class="depot">${esc(d.name)}</h1>
     <div class="subline">Unrealisiert ${pf(d.unrealizedContribution)} · realisiert ${pf(d.realizedContribution)} · alle Angaben in %</div>
     ${metrics}${alloc}${table}${realized}`;
   postHeight();
 }
-
-/* iframe-Auto-Höhe: Inhaltshöhe wiederholt an das systeme.io-Fenster melden */
 function postHeight(){
   try{
     const h = Math.max(
@@ -333,9 +292,7 @@ function postHeight(){
 }
 window.addEventListener("resize", postHeight);
 window.addEventListener("load", postHeight);
-/* mehrfach nachfeuern, damit die Meldung nicht verpasst wird (Race mit dem Parent-Listener) */
 [150,400,800,1300,2000,3000,4500].forEach(t=>setTimeout(postHeight, t));
-
 async function load(){
   skeleton();
   try{
@@ -346,7 +303,6 @@ async function load(){
     if(!j.depots) throw new Error("Unerwartetes Format");
     DATA = j; preview = false; render();
   }catch(e){
-    /* Worker (noch) nicht erreichbar -> Vorschau mit Beispieldaten statt Fehlerbild */
     DATA = SAMPLE; preview = true; render();
   }
 }
