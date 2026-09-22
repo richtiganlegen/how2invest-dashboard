@@ -194,7 +194,6 @@ const SAMPLE = {generatedAt:new Date().toISOString(), depots:{
     ]},
   zukunft:{name:"Zukunftsdepot",cashQuote:0.80,equityQuote:0.20,heldCount:1,
     realizedContribution:0,unrealizedContribution:0.0066,totalReturn:0.0066,
-    benchmark:{ticker:"IWDC.SW",name:"MSCI World (CHF, gesichert)",startDate:"2026-07-28",return:0.018},
     positions:[
       {name:"XPeng Inc. (ADR)",ticker:"XPEV",currency:"USD",buyPrice:12.78,weight:0.20,targetPrice:null,potential:null,status:"Gehalten",currentPrice:13.20,currentReturn:0.0329,priceOk:true}
     ]}
@@ -244,9 +243,10 @@ function render(){
 
   /* Kennzahlen */
   const benchTitle = d.benchmark ? `${d.benchmark.name} · Start ${new Date(d.benchmark.startDate).toLocaleDateString("de-CH")}` : "";
+  const benchCard = d.benchmark ? `<div class="metric" title="${esc(benchTitle)}"><div class="lab">MSCI World (CHF)</div><div class="val ${cls(d.benchmark.return)}">${pf(d.benchmark.return)}</div></div>` : "";
   const metrics = `<div class="metrics">
     <div class="metric lead"><div class="lab">Gesamt-Return</div><div class="val ${cls(d.totalReturn)}">${pf(d.totalReturn)}</div></div>
-    <div class="metric" title="${esc(benchTitle)}"><div class="lab">MSCI World (CHF)</div><div class="val ${cls(d.benchmark?.return)}">${d.benchmark ? pf(d.benchmark.return) : "–"}</div></div>
+    ${benchCard}
     <div class="metric"><div class="lab">Cash-Quote</div><div class="val">${pf0(d.cashQuote)}</div></div>
     <div class="metric"><div class="lab">Aktien-Exposure</div><div class="val">${pf0(d.equityQuote)}</div></div>
     <div class="metric"><div class="lab">Realisiert</div><div class="val ${cls(d.realizedContribution)}">${pf(d.realizedContribution)}</div></div>
