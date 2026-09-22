@@ -21,10 +21,12 @@ const DEPOTS = {
   value: {
     name: "Value Depot",
     csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSm8lyrM7iLKZw4-pBjgmLLk2N6hciFy8UnkDdcdf6-bprjVtV4xsGzIoFNj4MxMXmTdZnK1l2FDVEB/pub?gid=336088195&single=true&output=csv",
+    benchmark: true, // Vergleich zu MSCI World (CHF) — beim Zukunftsdepot bewusst nicht sinnvoll (thematisch/spekulativ)
   },
   zukunft: {
     name: "Zukunftsdepot",
     csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSm8lyrM7iLKZw4-pBjgmLLk2N6hciFy8UnkDdcdf6-bprjVtV4xsGzIoFNj4MxMXmTdZnK1l2FDVEB/pub?gid=966858719&single=true&output=csv",
+    benchmark: false,
   },
 };
 
@@ -223,7 +225,7 @@ async function enrichDepot(name, def) {
   const held = parsed.positions.filter((p) => p.status !== "Verkauft" && p.ticker);
   const [quotes, benchmark] = await Promise.all([
     Promise.all(held.map((p) => fetchQuote(p.ticker).catch(() => null))),
-    fetchBenchmarkReturn(parsed.positions).catch(() => null),
+    def.benchmark ? fetchBenchmarkReturn(parsed.positions).catch(() => null) : Promise.resolve(null),
   ]);
   const qByTicker = {};
   held.forEach((p, i) => (qByTicker[p.ticker] = quotes[i]));
