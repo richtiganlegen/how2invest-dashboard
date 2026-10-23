@@ -12,11 +12,9 @@
  * dein Signal-Dashboard). Kurse ~15 Min verzögert.
  *
  * Ausgabe rein prozentual — KEINE Beträge, keine Anlagesumme (jede/r entscheidet
- * individuell). Positions-Return in CHF: Verkaufserlös heute (Kurs x Wechselkurs,
- * abzüglich Verkaufsgebühren) gegenüber den tatsächlichen Kaufkosten je Aktie in CHF
- * inkl. Gebühren (Sheet-Spalte "Kosten je Aktie CHF"). Ohne diesen Wert: Rendite in
- * Originalwährung mit pauschalen Gebühren. Der gewichtete Depot-Beitrag summiert
- * diese Returns nach den %-Gewichten aus dem Sheet.
+ * individuell). Positions-Return als reine Kursentwicklung seit Kauf (Live-Kurs gegenüber
+ * Kaufkurs in Originalwährung des Titels, ohne Gebühren und ohne Wechselkurs).
+ * Der gewichtete Depot-Beitrag summiert diese Returns nach den %-Gewichten aus dem Sheet.
  */
 
 const DEPOTS = {
@@ -167,28 +165,6 @@ async function fetchQuote(symbol) {
   return { price: meta.regularMarketPrice, currency: meta.currency || null };
 }
 
-/* ---------- Trading-Gebühren (pauschale Annahme, prozentual) ---------- */
-const TRADE_FEE = 0.002;  // 0.20% Kommission/Stempel/Diverses, je Trade-Seite (Kauf und Verkauf)
-const FX_FEE = 0.0025;    // 0.25% Fremdwährungszuschlag je Trade-Seite, nur bei Nicht-CHF-Titeln
-function feeFor(currency) {
-  return TRADE_FEE + (currency && currency.toUpperCase() !== "CHF" ? FX_FEE : 0);
-}
-
-/* ---------- Wechselkurs Titelwährung -> CHF (Yahoo, Mittelkurs) ---------- */
-const FX_SYMBOLS = { USD: "USDCHF=X", EUR: "EURCHF=X", GBP: "GBPCHF=X", AUD: "AUDCHF=X" };
-async function fetchFxToChf(currency) {
-  if (!currency) return null;
-  if (currency === "CHF") return 1;
-  if (currency === "GBp") {               // London notiert in Pence
-    const gbp = await fetchFxToChf("GBP");
-    return gbp == null ? null : gbp / 100;
-  }
-  const sym = FX_SYMBOLS[currency.toUpperCase()];
-  if (!sym) return null;
-  const q = await fetchQuote(sym).catch(() => null);
-  return q ? q.price : null;
-}
-
 /* ---------- Benchmark: MSCI World (CHF, währungsgesichert) seit Start ---------- */
 const BENCHMARK = { ticker: "IWDC.SW", name: "MSCI World (CHF, gesichert)" };
 const BENCHMARK_TTL = 21600; // 6h — Startkurs ist historisch fix, muss nicht oft neu geholt werden
@@ -243,42 +219,27 @@ async function enrichDepot(name, def) {
   const parsed = parseDepot(await res.text());
 
   const held = parsed.positions.filter((p) => p.status !== "Verkauft" && p.ticker);
-  const fxCurrencies = [...new Set(held.filter((p) => p.costChf).map((p) => p.currency))];
-  const [quotes, benchmark, fxRates] = await Promise.all([
+  const [quotes, benchmark] = await Promise.all([
     Promise.all(held.map((p) => fetchQuote(p.ticker).catch(() => null))),
     def.benchmark ? fetchBenchmarkReturn(parsed.positions).catch(() => null) : Promise.resolve(null),
-    Promise.all(fxCurrencies.map((c) => fetchFxToChf(c).catch(() => null))),
   ]);
   const qByTicker = {};
   held.forEach((p, i) => (qByTicker[p.ticker] = quotes[i]));
-  const fxByCcy = {};
-  fxCurrencies.forEach((c, i) => (fxByCcy[c] = fxRates[i]));
 
   // Rein prozentual — keine Beträge, keine Anlagesumme (jede/r entscheidet individuell)
-  // Schritt 1: Live-Return je gehaltener Position, NETTO Trading-Gebühren (Kauf- und
-  // Verkaufsseite) — entspricht dem Return, der bliebe, würde man heute zu diesem Kurs
-  // verkaufen. Realistischer als der reine Kursvergleich, besonders bei vielen Trades.
+  // Schritt 1: Live-Return je gehaltener Position als reine Kursentwicklung seit Kauf
+  // (ohne Gebühren), damit Kurs über Einstand immer auch eine positive Rendite zeigt.
   let unrealizedContribution = 0;
   const withReturn = parsed.positions.map((p) => {
     const q = qByTicker[p.ticker] || null;
-    let currentPrice = null, currentReturn = null, returnBasis = null;
+    let currentPrice = null, currentReturn = null;
     if (p.status !== "Verkauft" && q && p.buyPrice) {
       // Yahoo liefert .L in GBp (Pence) — Kaufkurs steht ebenfalls in GBp -> Verhältnis stimmt
       currentPrice = q.price;
-      const fee = feeFor(p.currency);
-      const fx = p.costChf ? fxByCcy[p.currency] : null;
-      if (p.costChf && fx != null) {
-        // CHF-Rendite: Verkaufserlös heute (Kurs x Wechselkurs, abzüglich Verkaufsgebühren)
-        // gegenüber den tatsächlichen Kaufkosten je Aktie in CHF inkl. Gebühren (aus Saxo)
-        currentReturn = (currentPrice * fx * (1 - fee)) / p.costChf - 1;
-        returnBasis = "CHF";
-      } else {
-        // Fallback ohne CHF-Kosten: Rendite in Originalwährung mit pauschalen Gebühren
-        currentReturn = (currentPrice * (1 - fee)) / (p.buyPrice * (1 + fee)) - 1;
-      }
+      currentReturn = currentPrice / p.buyPrice - 1;
       if (p.weight != null) unrealizedContribution += p.weight * currentReturn;
     }
-    return { ...p, currentPrice, currentReturn, returnBasis, priceOk: !!q };
+    return { ...p, currentPrice, currentReturn, priceOk: !!q };
   });
 
   const realizedContribution = parsed.realizedTotal || 0;
